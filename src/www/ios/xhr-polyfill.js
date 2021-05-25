@@ -894,11 +894,15 @@
         }
         else
         {
-          if ("all" === interceptRemoteRequests ||
-             ("secureOnly" === interceptRemoteRequests && context.url.startsWith("https://")))
-            resolve(new HttpHandler(context, config));
-          else
+          if (context.url.startsWith("custom")){
+            context.url = context.url.split("^")[1];
             resolve(new DelegateHandler(context, config));
+          } else if ("all" === interceptRemoteRequests ||
+             ("secureOnly" === interceptRemoteRequests && context.url.startsWith("https://"))){
+            resolve(new HttpHandler(context, config));
+          }else{
+            resolve(new DelegateHandler(context, config));
+          }
         }
       });
     });
